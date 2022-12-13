@@ -10,7 +10,7 @@ class Test(Enemy):
         image = pg.Surface((80, 80))
         image.fill((190, 210, 190))
         self.pos = pos
-        super().__init__(pos, (190, 210, 190), image, 5, 1)
+        super().__init__(pos, (190, 210, 190), image, 5)
         # super().__init__(pos, (190, 210, 190), image, 5, 0, 1)
 
     def update(self, world, time=None) -> list:

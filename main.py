@@ -8,7 +8,7 @@ import os
 
 class World:
     def __init__(self):
-        self.player = Player([100, 100], (240, 200, 200), pg.Surface((50, 50)))
+        self.player = Player(PSIZE, (240, 200, 200), pg.Surface((50, 50)))
         self.player.image.fill((240, 200, 200))
         self.level = Level({})
         self.enemies = np.array([])
@@ -16,6 +16,7 @@ class World:
         self.effects = [np.array([[-1, None, None, None]], ndmin=2), np.array([[-1, None, None, None]], ndmin=2)]
         # self.effects = np.array([[-1, None, None, None]], ndmin=2)
         self.time = 0
+        self.updates = True
         self.teleport_allowed = False
 
     def update(self):
@@ -39,10 +40,13 @@ class World:
             other.rect = upd[1]
             # other.set_future(self)
         self.player.update(self)
-        self.time += 1
+        if self.updates: self.time += 1
 
     def game_over(self):
+        self.updates = False
+        self.time = 0
         self.enemies = np.array([])
+        self.player.game_over = 1
 
     def load_level(self, name):
         if os.path.isfile(f'levels/{name}.py'):
@@ -62,7 +66,8 @@ class Paint:
         self.screen.fill(color)
 
     def draw_player(self, world):
-        self.screen.blit(world.player.image, world.player.rect[:2])
+        # self.screen.blit(world.player.image, world.player.rect[:2])
+        pg.draw.rect(self.screen, world.player.color, world.player.rect, max(1, int(world.player.hp * HPCOEFF // 4)))
         if world.player.second_rect[0]:
             self.screen.blit(world.player.image, world.player.second_rect)
 
@@ -83,14 +88,14 @@ class Paint:
             elif r[0] == 0:
                 pg.draw.rect(self.screen, r[2] // 4, r[1])
                 world.effects[upper][i-deleted, 3] -= 1
-                if r[3] == 0:
+                if r[3] <= 0:
                     world.effects[upper] = np.delete(world.effects[upper], i-deleted, axis=0)
                     deleted += 1
             elif r[0] == 1:
                 color = (np.array(DEF_BG_COLOR) * r[3] + r[2] * (FUTURE - r[3])) // FUTURE
                 pg.draw.rect(self.screen, color, r[1])
                 world.effects[upper][i-deleted, 3] -= 1
-                if r[3] == 0:
+                if r[3] <= 0:
                     world.effects[upper] = np.delete(world.effects[upper], i-deleted, axis=0)
                     deleted += 1
         # world.effects[:, 3] -= 1
@@ -126,5 +131,5 @@ class Main:
 
 if __name__ == '__main__':
     main = Main()
-    main.world.load_level('test')
+    main.world.load_level('test_level')
     main.run()

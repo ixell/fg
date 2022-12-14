@@ -17,7 +17,7 @@ class Righter(Enemy):
         if time is None: time = world.time
         time = self.get_time(time)
         rect = self.rect.copy()
-        rect[0] = time * 1 + self.pos[0]
+        rect[0] = time * 5 + self.pos[0]
         if self.rect[0] > SWIDTH:
             return [-1, None, None, None]
         return [self.future_type, rect, self.color, FUTURE]
@@ -34,17 +34,17 @@ class ModyRighter(Righter):
 
 
 level = {
-    10: [[1, lambda: Righter((-60-FUTURE, 30), 10)]],
-    30: [[1, lambda: Righter((-60-FUTURE, 400), 30)]],
-    # 350: [[1, lambda: ModyRighter((-500-FUTURE, SHEIGHT//2), 350)]],
-    # 400: [[1, lambda: ModyRighter((-500-FUTURE, SHEIGHT//4), 400)]],
-    # 450: [[1, lambda: ModyRighter((-500-FUTURE, SHEIGHT//3*2), 450)]],
-    # 500: [[1, lambda: ModyRighter((-500-FUTURE, SHEIGHT//2), 500)]],
-    # 550: [[1, lambda: ModyRighter((-500-FUTURE, SHEIGHT//6), 550)]],
-    # 600: [[1, lambda: ModyRighter((-500-FUTURE, SHEIGHT//12*7), 600)]],
+    10: [[1, lambda: Righter((-60-FUTURE*5, 30), 10)]],
+    30: [[1, lambda: Righter((-60-FUTURE*5, 400), 30)]],
+    350: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//2), 350)]],
+    400: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//4), 400)]],
+    450: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//3*2), 450)]],
+    500: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//2), 500)]],
+    550: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//6), 550)]],
+    600: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//12*7), 600)]],
 }
 level = Level(level)
 
-enemies = np.array([Righter((-60-FUTURE, 300))])
+enemies = np.array([Righter((-60-FUTURE*5, 300))])
 other = np.array([])
 __all__ = [level, enemies, other]

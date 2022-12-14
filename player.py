@@ -5,15 +5,37 @@ from base import Object
 
 
 class Player(Object):
-    def __init__(self, rect: tuple or list, color: list or tuple, image: pg.Surface, hp: int = DEFHP):
+    def __init__(self, rect: tuple or list, color: list or tuple, image: pg.Surface, hp: int = DEFPHP):
         super().__init__(rect, color, image)
+        self.game_over = 0
+        self.color = list(color)
         self.hp = hp
         self.second_rect = np.array([0, 0])
+        self.wait = 0
 
     def update(self, world):
-        self.move()
-        self.collide(world)
-        self.wall_collide(world)
+        if self.wait:
+            self.wait -= 1
+        else:
+            if self.game_over:
+                if self.game_over == 1:
+                    if self.color[0] < 255: self.color[0] = min(self.color[0] + 15, 255)
+                    if self.color[1] < 255: self.color[1] = min(self.color[1] + 15, 255)
+                    if self.color[2] < 255: self.color[2] = min(self.color[2] + 15, 255)
+                    if self.hp < DEFPHP: self.hp = self.hp + 10
+                    if self.color[0] == 255 and self.color[1] == 255 and self.color[2] == 255 and self.hp == DEFPHP:
+                        self.wait = 2
+                        self.game_over = 2
+                else:
+                    if self.color[0] > DEF_BG_COLOR[0]:
+                        self.color[0] = max(self.color[0] - 10, DEF_BG_COLOR[0])
+                        self.color[1] = max(self.color[1] - 10, DEF_BG_COLOR[1])
+                        self.color[2] = max(self.color[2] - 10, DEF_BG_COLOR[2])
+                self.image.fill(self.color)
+            else:
+                self.move()
+                self.collide(world)
+                self.wall_collide(world)
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -37,9 +59,9 @@ class Player(Object):
                 collided = np.append(collided, enemy)
             if world.teleport_allowed and \
                     self.second_rect[0] < enemy.rect[0] + enemy.rect[2] and \
-                    self.second_rect[0] + self.second_rect[2] > enemy.rect[0] and \
+                    self.second_rect[0] + self.rect[2] > enemy.rect[0] and \
                     self.second_rect[1] < enemy.rect[1] + enemy.rect[3] and \
-                    self.second_rect[3] + self.second_rect[1] > enemy.rect[1]:
+                    self.rect[3] + self.second_rect[1] > enemy.rect[1]:
                 collided = np.append(collided, enemy)
         for enemy in collided:
             self.hp -= enemy.damage

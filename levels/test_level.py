@@ -11,7 +11,7 @@ class Righter(Enemy):
         image.fill((210, 165, 140))
         self.pos = pos
         # super().__init__(pos, (210, 165, 140), image, 5, time, 0)
-        super().__init__(pos, (210, 165, 140), image, 1, time, 0)
+        super().__init__(pos, image, (210, 165, 140), 1, time, 0)
 
     def update(self, world, time=None) -> list:
         if time is None: time = world.time
@@ -23,7 +23,7 @@ class Righter(Enemy):
         return [self.future_type, rect, self.color, FUTURE]
 
 
-class ModyRighter(Righter):
+class WaveRighter(Righter):
     def update(self, world, time=None):
         if time is None: time = world.time
         ft, rect, c, _ = super().update(world, time)
@@ -36,12 +36,12 @@ class ModyRighter(Righter):
 level = {
     10: [[1, lambda: Righter((-60-FUTURE*5, 30), 10)]],
     30: [[1, lambda: Righter((-60-FUTURE*5, 400), 30)]],
-    350: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//2), 350)]],
-    400: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//4), 400)]],
-    450: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//3*2), 450)]],
-    500: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//2), 500)]],
-    550: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//6), 550)]],
-    600: [[1, lambda: ModyRighter((-500-FUTURE*5, SHEIGHT//12*7), 600)]],
+    350: [[1, lambda: WaveRighter((-500 - FUTURE * 5, SHEIGHT // 2), 350)]],
+    400: [[1, lambda: WaveRighter((-500 - FUTURE * 5, SHEIGHT // 4), 400)]],
+    450: [[1, lambda: WaveRighter((-500 - FUTURE * 5, SHEIGHT // 3 * 2), 450)]],
+    500: [[1, lambda: WaveRighter((-500 - FUTURE * 5, SHEIGHT // 2), 500)]],
+    550: [[1, lambda: WaveRighter((-500 - FUTURE * 5, SHEIGHT // 6), 550)]],
+    600: [[1, lambda: WaveRighter((-500 - FUTURE * 5, SHEIGHT // 12 * 7), 600)]],
 }
 level = Level(level)
 

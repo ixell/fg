@@ -16,7 +16,7 @@ class Level:
 
 
 class Object:
-    def __init__(self, rect: tuple or list, color: tuple or list, image: pg.Surface, time: int = 0, future_type: int = 0):
+    def __init__(self, rect: tuple or list, image: pg.Surface, color: tuple or list, time: int = 0, future_type: int = 0):
         self.image = image.convert()
         self.color = np.array(color)
         self.time = time
@@ -25,7 +25,7 @@ class Object:
             self.rect = np.array([*rect, *self.image.get_size()])
         else:
             self.rect = np.array(rect)
-            pg.transform.scale(self.image, self.rect[2:])
+            self.image = pg.transform.scale(self.image, self.rect[2:])
 
     def update(self, world, time: int = None) -> list:
         return [self.future_type, self.rect, self.color, FUTURE]
@@ -39,6 +39,6 @@ class Object:
 
 
 class Enemy(Object):
-    def __init__(self, rect: list or tuple, color: list or tuple, image: pg.Surface, damage: int, time: int = 0, future_type: int = 0):
-        super().__init__(rect, color, image, time, future_type)
+    def __init__(self, rect: list or tuple, image: pg.Surface, color: list or tuple, damage: int, time: int = 0, future_type: int = 0):
+        super().__init__(rect, image, color, time, future_type)
         self.damage = damage

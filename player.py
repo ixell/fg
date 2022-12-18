@@ -5,13 +5,24 @@ from base import Object
 
 
 class Player(Object):
-    def __init__(self, rect: tuple or list, color: list or tuple, image: pg.Surface, hp: int = DEFPHP):
-        super().__init__(rect, color, image)
+    def __init__(self, rect: tuple or list, image: pg.Surface, color: list or tuple = DEF_PCOLOR, hp: int = DEFPHP, clhp: list or tuple = DEF_PCLHP):
+        super().__init__(rect, image, color)
         self.game_over = 0
         self.color = list(color)
+        self.clhp = clhp
+        self.color_swap = False
         self.hp = hp
         self.second_rect = np.array([0, 0])
         self.wait = 0
+
+    def update_image(self, time):
+        self.image.fill(self.color)
+        size = (self.rect[2] - self.hp * HPCOEFF) // 2, (self.rect[3] - self.hp * HPCOEFF) // 2
+        size = *size, int(sum(size) // 2)
+        if size[2]:
+            rect = (time - size[0]) % self.rect[2] // 2 + size[0], (time - size[1]) % self.rect[3] // 2 + size[1]
+            rect = self.rect[2] // 2 - rect[0], self.rect[3] // 2 - rect[1], rect[0] * 2, rect[1] * 2
+            pg.draw.rect(self.image, self.clhp, rect, size[2])
 
     def update(self, world):
         if self.wait:

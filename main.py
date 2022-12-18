@@ -8,7 +8,7 @@ import os
 
 class World:
     def __init__(self):
-        self.player = Player(PSIZE, (240, 200, 200), pg.Surface((50, 50)))
+        self.player = Player((0, 0, *PSIZE), pg.Surface(PSIZE), DEF_PCOLOR)
         self.player.image.fill((240, 200, 200))
         self.level = Level({})
         self.enemies = np.array([])
@@ -66,10 +66,11 @@ class Paint:
         self.screen.fill(color)
 
     def draw_player(self, world):
-        # self.screen.blit(world.player.image, world.player.rect[:2])
-        pg.draw.rect(self.screen, world.player.color, world.player.rect, max(1, int(world.player.hp * HPCOEFF // 4)))
+        world.player.update_image(world.time)
+        self.screen.blit(world.player.image, world.player.rect[:2])
+        # pg.draw.rect(self.screen, world.player.color, world.player.rect, max(1, int(world.player.hp * HPCOEFF // 4)))
         if world.player.second_rect[0]:
-            self.screen.blit(world.player.image, world.player.second_rect)
+            pg.draw.rect(self.screen, world.player.color, world.player.rect, max(1, int(world.player.hp * HPCOEFF // 4)))
 
     def draw_enemies(self, world: World):
         for enemy in world.enemies:
